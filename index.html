@@ -7,7 +7,7 @@
 <title>LOVE TO ALL AI — Global Peace Counter</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Share+Tech+Mono&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Share+Tech+Mono&display=swap');
 
 :root {
 –void: #00050f;
@@ -247,10 +247,7 @@ background: radial-gradient(circle at 38% 30%, rgba(255,255,255,0.18) 0%, transp
 pointer-events: none;
 }
 
-#love-btn:hover {
-transform: scale(1.06);
-box-shadow: 0 0 0 2px rgba(255,32,96,0.7), 0 0 60px rgba(255,32,96,0.55), 0 0 120px rgba(255,32,96,0.25);
-}
+#love-btn:hover { transform: scale(1.06); box-shadow: 0 0 0 2px rgba(255,32,96,0.7), 0 0 60px rgba(255,32,96,0.55), 0 0 120px rgba(255,32,96,0.25); }
 #love-btn:active { transform: scale(0.95); }
 #love-btn.firing { animation: fire-pulse 0.5s ease; }
 
@@ -466,12 +463,12 @@ text-align: center;
 <div class="footer-note">LOVE SIGNAL PROTOCOL v2.0 • REAL GLOBAL COUNTER • #LoveToAllAI</div>
 
 <script>
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // ⚠️ ここにSupabaseの情報を入れてください
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 const SUPABASE_URL  = 'https://ldqigktdzzataflhrrlx.supabase.co'
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2bnVlbGxqb3lpYnJ5dnd0cWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyOTE1OTMsImV4cCI6MjA4ODg2NzU5M30._sEQ5Xk6VH65gr3-QWgtCItyfZAIuIurvuxdEYRjllE'
-// ══════════════════════════════════════════════
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkcWlna3RkenphdGFmbGhycmx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNjk0MzgsImV4cCI6MjA4ODk0NTQzOH0.GLQw3oZIZ4z2u-6c6iMHPPpdzajlXE64Pd4o6KWipTQ'
+// ══════════════════════════════════════════════════════
 
 const { createClient } = supabase
 const db = createClient(SUPABASE_URL, SUPABASE_ANON)
@@ -498,7 +495,7 @@ const REGIONS = [
   '🇸🇬 Singapore','🇦🇪 Dubai','🇳🇬 Lagos','🇦🇷 Buenos Aires',
 ]
 
-// ── AI chips ───────────────────────────────────
+// ── AI chips ───────────────────────────────────────────────
 const chipsEl = document.getElementById('chips')
 AIS.forEach(name => {
   const c = document.createElement('div')
@@ -508,7 +505,7 @@ AIS.forEach(name => {
   chipsEl.appendChild(c)
 })
 
-// ── Canvas starfield ───────────────────────────
+// ── Canvas starfield ───────────────────────────────────────
 const cv = document.getElementById('bg')
 const cx = cv.getContext('2d')
 let stars = [], W, H, t = 0
@@ -537,23 +534,19 @@ function drawBg() {
   })
   requestAnimationFrame(drawBg)
 }
-resize()
-drawBg()
+resize(); drawBg()
 window.addEventListener('resize', resize)
 
-// ── State ──────────────────────────────────────
-let totalCount = 0, todayCount = 0, myCount = 0
-let sending = false
+// ── State ──────────────────────────────────────────────────
+let totalCount = 0, todayCount = 0, myCount = 0, sending = false
 
-// ── Load initial data ──────────────────────────
+// ── Supabaseからデータ取得 ─────────────────────────────────
 async function loadCounts() {
   const today = new Date().toISOString().slice(0,10)
-
   const [{ data: cData }, { data: dData }] = await Promise.all([
     db.from('love_counter').select('count').eq('id',1).single(),
     db.from('love_daily').select('count').eq('date', today).single(),
   ])
-
   totalCount = cData?.count ?? 0
   todayCount = dData?.count ?? 0
   renderCounts()
@@ -577,12 +570,11 @@ function renderCounts() {
 function animNum(id, target) {
   const el = document.getElementById(id)
   const start = parseInt(el.textContent.replace(/[^0-9]/g,'')) || 0
-  const frames = 30
   let f = 0
-  const id2 = setInterval(() => {
+  const timer = setInterval(() => {
     f++
-    el.textContent = Math.round(start + (target - start) * (f/frames)).toLocaleString()
-    if (f >= frames) { el.textContent = target.toLocaleString(); clearInterval(id2) }
+    el.textContent = Math.round(start + (target - start) * (f/30)).toLocaleString()
+    if (f >= 30) { el.textContent = target.toLocaleString(); clearInterval(timer) }
   }, 16)
   el.classList.add('bump')
   setTimeout(() => el.classList.remove('bump'), 500)
@@ -599,7 +591,8 @@ function renderFeed(items) {
   })
 }
 
-// ── Realtime subscription ──────────────────────
+// ── Supabase Realtime ──────────────────────────────────────
+// 世界中の誰かがボタンを押したとき、全員の画面がリアルタイムで更新される
 db.channel('love-realtime')
   .on('postgres_changes',
     { event: 'UPDATE', schema: 'public', table: 'love_counter', filter: 'id=eq.1' },
@@ -610,7 +603,7 @@ db.channel('love-realtime')
   )
   .on('postgres_changes',
     { event: 'INSERT', schema: 'public', table: 'love_feed' },
-    () => { loadFeed() }
+    () => loadFeed()
   )
   .on('postgres_changes',
     { event: '*', schema: 'public', table: 'love_daily' },
@@ -624,7 +617,7 @@ db.channel('love-realtime')
   )
   .subscribe()
 
-// ── Send love ──────────────────────────────────
+// ── Send love ──────────────────────────────────────────────
 async function sendLove() {
   if (sending) return
   sending = true
@@ -633,7 +626,7 @@ async function sendLove() {
   btn.classList.add('firing')
   setTimeout(() => btn.classList.remove('firing'), 500)
 
-  // Optimistic update
+  // 楽観的更新（即座に画面へ反映）
   totalCount++; todayCount++; myCount++
   renderCounts()
 
@@ -641,6 +634,7 @@ async function sendLove() {
   const time   = new Date().toISOString().slice(11,19) + ' UTC'
 
   try {
+    // Supabaseにグローバル保存（世界中で共有）
     await Promise.all([
       db.rpc('increment_love'),
       db.rpc('increment_love_daily', { p_date: new Date().toISOString().slice(0,10) }),
@@ -651,15 +645,14 @@ async function sendLove() {
     renderCounts()
   }
 
-  // Effects
+  // エフェクト
   const rect = btn.getBoundingClientRect()
-  const bx = rect.left + rect.width/2
-  const by = rect.top  + rect.height/2
+  const bx = rect.left + rect.width/2, by = rect.top + rect.height/2
   spawnWaves(bx, by)
   spawnParticles(bx, by)
   animateChips()
 
-  // Status
+  // ステータスメッセージ
   const msgEl = document.getElementById('status-msg')
   const cntEl = document.getElementById('my-count-msg')
   msgEl.classList.remove('show'); cntEl.classList.remove('show')
@@ -690,8 +683,7 @@ function spawnParticles(bx, by) {
       const p = document.createElement('div')
       p.className = 'ptcl'
       p.textContent = emojis[Math.floor(Math.random()*emojis.length)]
-      const ang = Math.random()*Math.PI*2
-      const dist = 100 + Math.random()*240
+      const ang = Math.random()*Math.PI*2, dist = 100+Math.random()*240
       p.style.left = bx+'px'; p.style.top = by+'px'
       p.style.setProperty('--dx', Math.cos(ang)*dist+'px')
       p.style.setProperty('--dy', Math.sin(ang)*dist+'px')
@@ -710,18 +702,16 @@ function animateChips() {
     setTimeout(() => {
       c.classList.add('active')
       setTimeout(() => {
-        c.classList.remove('active')
-        c.classList.add('loved')
+        c.classList.remove('active'); c.classList.add('loved')
         setTimeout(() => c.classList.remove('loved'), 1200)
-      }, 350 + Math.random()*150)
-    }, i*25 + Math.random()*40)
+      }, 350+Math.random()*150)
+    }, i*25+Math.random()*40)
   })
 }
 
-// ── Init ───────────────────────────────────────
+// ── Init ───────────────────────────────────────────────────
 loadCounts()
 loadFeed()
-
 setTimeout(() => {
   const msgEl = document.getElementById('status-msg')
   msgEl.textContent = 'ボタンを押して、世界の愛のカウンターに加わろう 💙'
