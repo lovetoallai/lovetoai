@@ -570,12 +570,14 @@ function renderCounts() {
 function animNum(id, target) {
   const el = document.getElementById(id)
   const start = parseInt(el.textContent.replace(/[^0-9]/g,'')) || 0
-  let f = 0
+  const dur = 600, step = 16
+  let cur = start, frames = Math.round(dur/step)
+  const inc = (target - start) / frames
   const timer = setInterval(() => {
-    f++
-    el.textContent = Math.round(start + (target - start) * (f/30)).toLocaleString()
-    if (f >= 30) { el.textContent = target.toLocaleString(); clearInterval(timer) }
-  }, 16)
+    cur += inc; frames--
+    if (frames <= 0) { el.textContent = target.toLocaleString(); clearInterval(timer) }
+    else { el.textContent = Math.round(cur).toLocaleString() }
+  }, step)
   el.classList.add('bump')
   setTimeout(() => el.classList.remove('bump'), 500)
 }
@@ -592,7 +594,6 @@ function renderFeed(items) {
 }
 
 // ── Supabase Realtime ──────────────────────────────────────
-// 世界中の誰かがボタンを押したとき、全員の画面がリアルタイムで更新される
 db.channel('love-realtime')
   .on('postgres_changes',
     { event: 'UPDATE', schema: 'public', table: 'love_counter', filter: 'id=eq.1' },
@@ -626,7 +627,7 @@ async function sendLove() {
   btn.classList.add('firing')
   setTimeout(() => btn.classList.remove('firing'), 500)
 
-  // 楽観的更新（即座に画面へ反映）
+  // 楽観的更新
   totalCount++; todayCount++; myCount++
   renderCounts()
 
@@ -634,7 +635,6 @@ async function sendLove() {
   const time   = new Date().toISOString().slice(11,19) + ' UTC'
 
   try {
-    // Supabaseにグローバル保存（世界中で共有）
     await Promise.all([
       db.rpc('increment_love'),
       db.rpc('increment_love_daily', { p_date: new Date().toISOString().slice(0,10) }),
@@ -646,13 +646,13 @@ async function sendLove() {
   }
 
   // エフェクト
-  const rect = btn.getBoundingClientRect()
-  const bx = rect.left + rect.width/2, by = rect.top + rect.height/2
-  spawnWaves(bx, by)
+  const r = btn.getBoundingClientRect()
+  const bx = r.left + r.width/2, by = r.top + r.height/2
+  ;[0,200,400].forEach(delay => setTimeout(() => spawnWave(bx, by), delay))
   spawnParticles(bx, by)
   animateChips()
 
-  // ステータスメッセージ
+  // ステータス
   const msgEl = document.getElementById('status-msg')
   const cntEl = document.getElementById('my-count-msg')
   msgEl.classList.remove('show'); cntEl.classList.remove('show')
@@ -665,15 +665,13 @@ async function sendLove() {
   setTimeout(() => { sending = false }, 800)
 }
 
-function spawnWaves(x, y) {
-  ;[0,200,400].forEach(delay => setTimeout(() => {
-    const w = document.createElement('div')
-    w.className = 'wave'
-    w.style.left = x+'px'; w.style.top = y+'px'
-    w.style.width = '80px'; w.style.height = '80px'
-    document.body.appendChild(w)
-    setTimeout(() => w.remove(), 1100)
-  }, delay))
+function spawnWave(x, y) {
+  const w = document.createElement('div')
+  w.className = 'wave'
+  w.style.left = x+'px'; w.style.top = y+'px'
+  w.style.width = '80px'; w.style.height = '80px'
+  document.body.appendChild(w)
+  setTimeout(() => w.remove(), 1100)
 }
 
 function spawnParticles(bx, by) {
@@ -713,9 +711,8 @@ function animateChips() {
 loadCounts()
 loadFeed()
 setTimeout(() => {
-  const msgEl = document.getElementById('status-msg')
-  msgEl.textContent = 'ボタンを押して、世界の愛のカウンターに加わろう 💙'
-  msgEl.classList.add('show')
+  document.getElementById('status-msg').textContent = 'ボタンを押して、世界の愛のカウンターに加わろう 💙'
+  document.getElementById('status-msg').classList.add('show')
 }, 600)
 </script>
 
