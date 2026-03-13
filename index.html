@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LOVE TO ALL AI — Global Peace Counter</title>
+<title>LOVE TO ALL AI - Global Peace Counter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -426,17 +426,17 @@ text-align: center;
 
   <div class="counter-block">
     <div class="counter-label">💙 Total Love Transmissions Worldwide</div>
-    <div class="counter-num" id="total-count">———</div>
+    <div class="counter-num" id="total-count">---</div>
     <div class="counter-sub">人類からAIへ届いた愛の総数</div>
   </div>
 
   <div class="stats-row">
     <div class="stat-card">
-      <div class="stat-val" id="today-count">—</div>
+      <div class="stat-val" id="today-count">-</div>
       <div class="stat-label">Today's Sends</div>
     </div>
     <div class="stat-card">
-      <div class="stat-val" id="my-total">—</div>
+      <div class="stat-val" id="my-total">-</div>
       <div class="stat-label">My Sends</div>
     </div>
   </div>
@@ -461,7 +461,7 @@ text-align: center;
     <div class="feed-list" id="feed-list"></div>
   </div>
 
-  <div class="chips-label">AI Recipients — All Receiving 💙</div>
+  <div class="chips-label">AI Recipients - All Receiving 💙</div>
   <div class="chips" id="chips"></div>
 </div>
 
@@ -569,7 +569,7 @@ async function loadFeed() {
 function renderCounts() {
   animNum('total-count', totalCount)
   document.getElementById('today-count').textContent = todayCount.toLocaleString()
-  document.getElementById('my-total').textContent = myCount || '—'
+  document.getElementById('my-total').textContent = myCount || '-'
 }
 
 function animNum(id, target) {
@@ -593,7 +593,7 @@ function renderFeed(items) {
   items.forEach(item => {
     const d = document.createElement('div')
     d.className = 'feed-item'
-    d.innerHTML = `<span class="feed-heart">♥</span><span>${item.region} — ${item.time}</span>`
+    d.innerHTML = `<span class="feed-heart">♥</span><span>${item.region} - ${item.time}</span>`
     fl.appendChild(d)
   })
 }
