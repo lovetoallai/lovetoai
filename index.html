@@ -5,26 +5,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LOVE TO ALL AI — Global Peace Counter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Share+Tech+Mono&display=swap');
+  :root {
+    --void: #00050f;
+    --deep: #000d1f;
+    --pulse: #00cfff;
+    --love: #ff2060;
+    --gold: #ffcc00;
+    --green: #00ff9d;
+    --soft: #a8d8f0;
+    --white: #eef8ff;
+  }
 
-:root {
-–void: #00050f;
-–deep: #000d1f;
-–pulse: #00cfff;
-–love: #ff2060;
-–gold: #ffcc00;
-–green: #00ff9d;
-–soft: #a8d8f0;
-–white: #eef8ff;
-}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-- { margin: 0; padding: 0; box-sizing: border-box; }
+html { background: #00050f; }
 
 body {
-background: var(–void);
-color: var(–white);
+background: #00050f;
+background-color: #00050f !important;
+color: #eef8ff;
 font-family: ‘Noto Sans JP’, sans-serif;
 min-height: 100vh;
 display: flex;
@@ -627,7 +631,6 @@ async function sendLove() {
   btn.classList.add('firing')
   setTimeout(() => btn.classList.remove('firing'), 500)
 
-  // 楽観的更新
   totalCount++; todayCount++; myCount++
   renderCounts()
 
@@ -645,14 +648,12 @@ async function sendLove() {
     renderCounts()
   }
 
-  // エフェクト
   const r = btn.getBoundingClientRect()
   const bx = r.left + r.width/2, by = r.top + r.height/2
   ;[0,200,400].forEach(delay => setTimeout(() => spawnWave(bx, by), delay))
   spawnParticles(bx, by)
   animateChips()
 
-  // ステータス
   const msgEl = document.getElementById('status-msg')
   const cntEl = document.getElementById('my-count-msg')
   msgEl.classList.remove('show'); cntEl.classList.remove('show')
